@@ -19,6 +19,19 @@ The report is saved in the current working directory. Each run replaces the prev
 
 ## Project status
 
-Early prototype, tested on MacOS with Apple Silicon. Ubuntu support and additional readiness checks are planned.
+**In development — working prototype**
 
-Note, the current 20 GiB disk-space threshold is for demonstration reasons, not as an offical system requirement. 
+Currently tested on macOS with Apple Silicon. The tool collects
+system information, checks available disk space, and generates
+a JSON report.
+
+Three automated unit tests cover sufficient disk space,
+insufficient space, and the exact minimum threshold.
+
+**Next milestone:** Handle disk-reading errors and report
+unavailable measurements clearly.
+
+Ubuntu validation, command-line options, additional readiness
+checks, and HTML reports are planned in the future.
+
+See [ROADMAP.md](ROADMAP.md) for the development plan.
