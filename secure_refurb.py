@@ -6,16 +6,26 @@ import sys
 
 
 def check_disk_space(path=".", minimum_free_gib=20):
-    disk = shutil.disk_usage(path)
+    try:
+        disk = shutil.disk_usage(path)
+    except OSError as error:
+       return {
+           "path": path,
+           "free_gib": None,
+           "minimum_free_gib": minimum_free_gib,
+           "passed": None,
+           "error": str(error)
+    }
+
     free_gib = disk.free / (1024 ** 3)
 
     return {
         "path": path,
         "free_gib": round(free_gib, 1),
         "minimum_free_gib": minimum_free_gib,
-        "passed": free_gib >= minimum_free_gib
+        "passed": free_gib >= minimum_free_gib,
+        "error": None
     }
-
 
 def main():
     print("SecureRefurb - System Information")
@@ -25,13 +35,19 @@ def main():
     print("Python executable:", sys.executable)
 
     disk_result = check_disk_space()
-    print(f"\nFree disk space: {disk_result['free_gib']:.1f} GiB")
-    print(f"Minimum required free space: {disk_result['minimum_free_gib']} GiB")
 
-    if disk_result["passed"]:
-        print("Disk space check passed.")
+    print(f"\nMinimum free disk space required: {disk_result['minimum_free_gib']} GiB")
+
+    if disk_result["passed"] is None:
+        print("Disk space check: UNABLE TO DETERMINE")
+        print("Reason:", disk_result["error"])
     else:
-        print("Disk space check failed. Insufficient free space.")
+        print(f"Free disk space: {disk_result['free_gib']:.1f} GiB")
+        
+        if disk_result["passed"]:
+            print("Disk space check passed.")
+        else:
+            print("Disk space check failed. Please free up some space.")
 
     report = {
         "operating_system": platform.system(),

@@ -33,5 +33,29 @@ class TestCheckDiskSpace(unittest.TestCase):
             self.assertTrue(result["passed"])
             self.assertEqual(result["free_gib"], 20)
 
+    def test_missing_path_returns_unknown(self):
+        with patch(
+            "secure_refurb.shutil.disk_usage",
+            side_effect=FileNotFoundError("No such file or directory")
+        ):
+            result = check_disk_space(path="/missing-test-path")
+
+        self.assertIsNone(result["passed"])
+        self.assertIsNone(result["free_gib"])
+        self.assertEqual(result["error"], "No such file or directory")
+        self.assertEqual(result["path"], "/missing-test-path")
+
+    def test_os_error_returns_unknown(self):
+        with patch(
+            "secure_refurb.shutil.disk_usage",
+            side_effect=OSError("Disk error")
+        ):
+            result = check_disk_space(path="/error-test-path")
+
+        self.assertIsNone(result["passed"])
+        self.assertIsNone(result["free_gib"])
+        self.assertEqual(result["error"], "Disk error")
+        self.assertEqual(result["path"], "/error-test-path")
+
 if __name__ == "__main__":
     unittest.main()
