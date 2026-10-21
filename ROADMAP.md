@@ -26,8 +26,8 @@ Build an Ubuntu readiness checker with four to six read-only checks, JSON and HT
 
 ## Command-line options
 
-- [ ] Allow users to select the disk path.
-- [ ] Allow users to set the minimum free space.
+- [x] Allow users to select the disk path.
+- [x] Allow users to set the minimum free space.
 - [ ] Allow users to choose the report filename.
 - [ ] Validate inputs and provide command-line help.
 

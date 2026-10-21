@@ -3,7 +3,7 @@ import platform
 import shutil
 import json
 import sys
-
+import argparse
 
 def check_disk_space(path=".", minimum_free_gib=20):
     try:
@@ -28,13 +28,21 @@ def check_disk_space(path=".", minimum_free_gib=20):
     }
 
 def main():
+    parser = argparse.ArgumentParser(description="Check computer readiness and generate JSON report.")
+    parser.add_argument("--path", default=".", help="Path to check disk space")
+    parser.add_argument("--minimum-free-gib", type=float, default=20, help="Minimum free disk space required in GiB")
+    args = parser.parse_args()
+
     print("SecureRefurb - System Information")
     print("Operating System:", platform.system())
     print("Processor architecture:", platform.machine())
     print("Python version:", platform.python_version())
     print("Python executable:", sys.executable)
 
-    disk_result = check_disk_space()
+    disk_result = check_disk_space(
+        path=args.path,
+        minimum_free_gib=args.minimum_free_gib
+    )
 
     print(f"\nMinimum free disk space required: {disk_result['minimum_free_gib']} GiB")
 
