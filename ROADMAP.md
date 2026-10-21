@@ -17,11 +17,12 @@ Build an Ubuntu readiness checker with four to six read-only checks, JSON and HT
 
 ## Next: reliable error handling
 
-- [ ] Handle missing paths and permission errors.
-- [ ] Report unavailable measurements as "unable to determine."
-- [ ] Include an explanation of each error in the report.
-- [ ] Add automated tests for error cases.
-- [ ] Confirm existing tests still pass.
+- [x] Handle missing paths and permission errors.
+- [x] Report unavailable measurements as "unable to determine."
+- [x] Include an explanation of each error in the report.
+- [x] Add automated tests for error cases.
+- [x] Confirm existing tests still pass.
+- [ ] Add a dedicated automated test for permission errors.
 
 ## Command-line options
 
