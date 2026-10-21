@@ -57,5 +57,17 @@ class TestCheckDiskSpace(unittest.TestCase):
         self.assertEqual(result["error"], "Disk error")
         self.assertEqual(result["path"], "/error-test-path")
 
+    def test_permission_error_returns_unknown(self):
+        with patch(
+            "secure_refurb.shutil.disk_usage",
+            side_effect=PermissionError("Permission denied")
+        ):
+            result = check_disk_space(path="/restricted-test-path")
+
+        self.assertIsNone(result["passed"])
+        self.assertIsNone(result["free_gib"])
+        self.assertEqual(result["error"], "Permission denied")
+        self.assertEqual(result["path"], "/restricted-test-path")
+
 if __name__ == "__main__":
     unittest.main()

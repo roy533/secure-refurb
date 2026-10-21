@@ -22,7 +22,7 @@ Build an Ubuntu readiness checker with four to six read-only checks, JSON and HT
 - [x] Include an explanation of each error in the report.
 - [x] Add automated tests for error cases.
 - [x] Confirm existing tests still pass.
-- [ ] Add a dedicated automated test for permission errors.
+- [x] Add a dedicated automated test for permission errors.
 
 ## Command-line options
 
