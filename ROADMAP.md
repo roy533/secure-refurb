@@ -15,7 +15,7 @@ Build an Ubuntu readiness checker with four to six read-only checks, JSON and HT
 - [x] Add three automated disk-space tests.
 - [x] Run successfully on macOS with Apple Silicon.
 
-## Next: reliable error handling
+## Completed: reliable error handling
 
 - [x] Handle missing paths and permission errors.
 - [x] Report unavailable measurements as "unable to determine."
@@ -24,14 +24,15 @@ Build an Ubuntu readiness checker with four to six read-only checks, JSON and HT
 - [x] Confirm existing tests still pass.
 - [x] Add a dedicated automated test for permission errors.
 
-## Command-line options
+## Completed: command-line options
 
 - [x] Allow users to select the disk path.
 - [x] Allow users to set the minimum free space.
-- [ ] Allow users to choose the report filename.
-- [ ] Validate inputs and provide command-line help.
+- [x] Validate minimum free space: accept finite, non-negative numbers.
+- [x] Add automated tests for valid and invalid thresholds.
+- [x] Provide command-line help.
 
-## Ubuntu validation
+## Next: Ubuntu validation
 
 - [ ] Run the script and tests in an Ubuntu environment.
 - [ ] Collect Ubuntu distribution and version information.
