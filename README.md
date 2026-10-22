@@ -6,6 +6,7 @@ A Python tool used for checking Linux computer readiness and generating system r
 - Displays operating system, processor architecture, and Python version.
 - Checks available disk space against a configurable threshold.
 - Saves system information and disk-space result to 'report.json'.
+- Rejects negative, infinite, and NaN minimum disk-space thresholds.
 
 ## Running the tool
 
@@ -18,7 +19,7 @@ python3 secure_refurb.py
 The report is saved in the current working directory. Each run replaces the previous report.
 
 ## Project status
-*last updated: October 21, 2026*
+*last updated: October 22, 2026*
 
 **In development — working prototype**
 
@@ -28,9 +29,9 @@ Command-line options allow users to select the disk path with --path and set the
 
 Missing paths, permission errors, and other disk-reading errors are handled without crashing. Unavailable measurments are reported as "unable to determine", with an explaination included in the JSON report.
 
-Six automated unit tests cover sufficient space, insufficient space, the exact minimum threshold, missing paths, permission errors, and general OS errors.
+Eleven automated unit tests cover disk-space checks, disk-reading errors, and valid/invalid mimimum-space thresholds.
 
-**Next milestone:** Validate command line inputs and allow users to choose the report filename.
+**Next milestone:** Allow users to change the report filename and handle report-saving errors.
 
 Ubuntu validation, command-line options, additional readiness checks, and HTML reports are planned in the future.
 
