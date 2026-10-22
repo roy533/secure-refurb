@@ -4,6 +4,7 @@ import shutil
 import json
 import sys
 import argparse
+import math
 
 def check_disk_space(path=".", minimum_free_gib=20):
     try:
@@ -27,10 +28,20 @@ def check_disk_space(path=".", minimum_free_gib=20):
         "error": None
     }
 
+def non_negative_finite_gib(value):
+    try:
+        number = float(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError("must be a number")
+
+    if not math.isfinite(number) or number < 0:
+        raise argparse.ArgumentTypeError("must be a finite non-negative number")
+    return number
+
 def main():
     parser = argparse.ArgumentParser(description="Check computer readiness and generate JSON report.")
     parser.add_argument("--path", default=".", help="Path to check disk space")
-    parser.add_argument("--minimum-free-gib", type=float, default=20, help="Minimum free disk space required in GiB")
+    parser.add_argument("--minimum-free-gib", type=non_negative_finite_gib, default=20, help="Minimum free disk space required in GiB")
     args = parser.parse_args()
 
     print("SecureRefurb - System Information")

@@ -1,8 +1,8 @@
+import argparse
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
-
-from secure_refurb import check_disk_space
+from secure_refurb import check_disk_space, non_negative_finite_gib
 
 class TestCheckDiskSpace(unittest.TestCase):
     def test_sufficient_space_passes(self):
@@ -68,6 +68,34 @@ class TestCheckDiskSpace(unittest.TestCase):
         self.assertIsNone(result["free_gib"])
         self.assertEqual(result["error"], "Permission denied")
         self.assertEqual(result["path"], "/restricted-test-path")
+
+class TestThresholdValidation(unittest.TestCase):
+    def test_valid_threshold(self):
+        for value, expected in [("0", 0.0), ("20", 20.0), ("2.5", 2.5)]:
+            with self.subTest(value=value):
+                self.assertEqual(non_negative_finite_gib(value), expected)
+
+        def test_invalid_threshold_non_numeric(self):
+            for value in ["-1", "inf", "-inf", "nan", "abc"]:
+                with self.subTest(value=value):
+                    with self.assertRaises(argparse.ArgumentTypeError):
+                        non_negative_finite_gib(value)
+
+    def test_invalid_threshold_non_numeric(self):
+        with self.assertRaises(argparse.ArgumentTypeError):
+            non_negative_finite_gib("abc")
+
+    def test_invalid_threshold_negative(self):
+        with self.assertRaises(argparse.ArgumentTypeError):
+            non_negative_finite_gib("-5")
+
+    def test_invalid_threshold_infinite(self):
+        with self.assertRaises(argparse.ArgumentTypeError):
+            non_negative_finite_gib("inf")
+
+    def test_invalid_threshold_nan(self):
+        with self.assertRaises(argparse.ArgumentTypeError):
+            non_negative_finite_gib("nan")
 
 if __name__ == "__main__":
     unittest.main()
