@@ -31,6 +31,11 @@ Build an Ubuntu readiness checker with four to six read-only checks, JSON and HT
 - [x] Validate minimum free space: accept finite, non-negative numbers.
 - [x] Add automated tests for valid and invalid thresholds.
 - [x] Provide command-line help.
+- [x] Allow users to choose the report filename with '--output'.
+- [x] Handle report-saving errors with a clear message.
+- [x] Return exit status 1 when saving fails.
+- [x] Add automated tests for custom report output and saving failures.
+- [ ] Test that running without '--output' creates 'report.json'.
 
 ## Next: Ubuntu validation
 
