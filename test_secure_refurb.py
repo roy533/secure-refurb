@@ -1,3 +1,8 @@
+import json
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
 import argparse
 import unittest
 from types import SimpleNamespace
@@ -97,5 +102,47 @@ class TestThresholdValidation(unittest.TestCase):
         with self.assertRaises(argparse.ArgumentTypeError):
             non_negative_finite_gib("nan")
 
+class TestReportSaving(unittest.TestCase):
+    def run_script(self, working_directory, *arguments):
+        script = Path(__file__).resolve().with_name("secure_refurb.py")
+
+        return subprocess.run(
+            [sys.executable, str(script), *arguments],
+            cwd=working_directory,
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+
+    def test_report_saved(self):
+        with tempfile.TemporaryDirectory() as folder:
+            result = self.run_script(folder)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+            report_file = Path(folder) / "report.json"
+            self.assertTrue(report_file.is_file())
+
+            with report_file.open(encoding="utf-8") as report_file:
+                report = json.load(report_file)
+
+            self.assertIn("disk_space", report)
+            self.assertIn("operating_system", report)
+
+    def test_save_failure_error(self):
+        with tempfile.TemporaryDirectory() as folder:
+            destination = Path(folder) / "missing-folder" / "report.json"
+
+            result = self.run_script(
+                folder, "--output", str(destination)
+            )
+
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("Unable to save report", result.stderr)
+            self.assertIn(str(destination), result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            self.assertNotIn("Report saved successfully", result.stdout)
+            self.assertFalse(destination.exists())
+            
 if __name__ == "__main__":
     unittest.main()

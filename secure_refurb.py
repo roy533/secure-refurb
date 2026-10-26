@@ -1,11 +1,9 @@
-from json.tool import main
 import platform
 import shutil
 import json
 import sys
 import argparse
 import math
-
 def check_disk_space(path=".", minimum_free_gib=20):
     try:
         disk = shutil.disk_usage(path)
@@ -42,6 +40,9 @@ def main():
     parser = argparse.ArgumentParser(description="Check computer readiness and generate JSON report.")
     parser.add_argument("--path", default=".", help="Path to check disk space")
     parser.add_argument("--minimum-free-gib", type=non_negative_finite_gib, default=20, help="Minimum free disk space required in GiB")
+    parser.add_argument(
+        "--output", default="report.json", help="Output JSON report file name (default: report.json)"
+    )
     args = parser.parse_args()
 
     print("SecureRefurb - System Information")
@@ -75,11 +76,16 @@ def main():
         "disk_space": disk_result
     }
 
-    with open("report.json", "w", encoding="utf-8") as report_file:
-        json.dump(report, report_file, indent=4)
+    try:
+        with open(args.output, "w", encoding="utf-8") as report_file:
+            json.dump(report, report_file, indent=4)
 
-    print("Report generated and saved successfully.")
+    except OSError as error:
+        print(f"Unable to save report to {args.output}: {error}", file=sys.stderr)
+        return 1
 
+    print(f"Report generated and saved successfully to {args.output}")
+    return 0
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
