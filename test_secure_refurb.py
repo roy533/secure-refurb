@@ -143,6 +143,21 @@ class TestReportSaving(unittest.TestCase):
             self.assertNotIn("Traceback", result.stderr)
             self.assertNotIn("Report saved successfully", result.stdout)
             self.assertFalse(destination.exists())
+
+    def test_default_report_saved(self):
+        with tempfile.TemporaryDirectory() as folder:
+            result = self.run_script(folder)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+            report_file = Path(folder) / "report.json"
+            self.assertTrue(report_file.is_file())
+
+            with report_file.open(encoding="utf-8") as report_file:
+                report = json.load(report_file)
+
+            self.assertIn("disk_space", report)
+            self.assertIn("operating_system", report)
             
 if __name__ == "__main__":
     unittest.main()
