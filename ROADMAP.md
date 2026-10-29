@@ -37,13 +37,16 @@ Build an Ubuntu readiness checker with four to six read-only checks, JSON and HT
 - [x] Add automated tests for custom report output and saving failures.
 - [X] Test that running without '--output' creates 'report.json'.
 
-## Next: Ubuntu validation
+## Completed: Ubuntu validation
 
-- [ ] Run the script and tests in an Ubuntu environment.
-- [ ] Collect Ubuntu distribution and version information.
-- [ ] Document the tested environment and any limitations.
+- [X] Run the script and all 14 tests in an Ubuntu environment.
+- [X] Collect Ubuntu distribution and version information. (Ubuntu 24.04.5 LTS, ARM64 (aarch64), and Python 3.12.3.)
+- [X] Generate and successfully parse `ubuntu-report.json`.
+- [X] Document the tested environment and any limitations in README.md.
 
-## Physical hardware and additional checks
+Validation completed on October 29. 2026 in UTM. Physical hardware testing remains pending.
+
+## Next: physical hardware and additional checks
 
 - [ ] Run SecureRefurb on a spare or refurbished computer.
 - [ ] Document the machine's hardware and test results.

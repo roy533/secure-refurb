@@ -28,15 +28,17 @@ python3 secure_refurb.py --output my-report.json
 Without `--output`, the report is saved as `report.json` in the current reporting directory. Each run replaces the destination file. The destination folder must already exist.
 
 ## Project status
-*last updated: October 26, 2026*
+*last updated: October 29, 2026*
 
 **In development — working prototype**
 
-Report output is configurable, with automated tests covering custom report saving and saving failures.
+Report output is configurable, with automated tests covering disk-space checks, threshold validation, default and custom report filenames, and report-saving failures.
 
-**Next milestone:** Adding a default-filename test, then validation of the tool on Ubuntu.
+All 14 automated tests passed on macOS and Ubuntu ARM64. SecureRefurb successfully generated a valid JSON report in the Ubuntu VM.
 
-Ubuntu validation, command-line options, additional readiness checks, and HTML reports are planned in the future.
+**Next milestone:** Validate the tool on physical Linux hardware (TBD)
+
+Additional readiness checks and HTML reports are planned.
 
 See [ROADMAP.md](ROADMAP.md) for the development plan.
 
@@ -47,3 +49,16 @@ Run the automated tests from the repository directory:
 ```bash
 python3 -m unittest -v
 ```
+## Ubuntu validation
+
+Validated on October 29, 2026 using Ubuntu Server in UTM.
+
+- Ubuntu: 24.04.5 LTS
+- Architecture: ARM64 (`aarch64`)
+- Python: 3.12.3
+- Automated tests: all 14 passed
+- Report: `ubuntu-report.json` generated and parsed successfully
+- Disk check: passed with 51.9 GiB available against a 20 GiB minimum
+- No code changes were required for this run.
+
+Physical hardware validation remains planned.
