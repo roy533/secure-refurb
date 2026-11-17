@@ -46,10 +46,15 @@ Build an Ubuntu readiness checker with four to six read-only checks, JSON and HT
 
 Validation completed on October 29. 2026 in UTM. Physical hardware testing remains pending.
 
-## Next: physical hardware and additional checks
+## Completed: physical hardware validation
 
-- [ ] Run SecureRefurb on a spare or refurbished computer.
-- [ ] Document the machine's hardware and test results.
+- [X] Run SecureRefurb on a spare or refurbished computer.
+- [X] Document the machine's hardware and test results.
+
+Physical validation completed on November 17, 2026 on a refurbished ThinkPad T14 Gen 2 Intel running Ubuntu Desktop (x86_64). All 14 tests passed, and 'thinkpad-report.json' was generated and parsed successfully. See README.md for the results.
+
+# Next: additional checks
+
 - [ ] Add a memory-capacity check.
 - [ ] Add a firewall-status check.
 - [ ] Add selected SSH configuration checks.
