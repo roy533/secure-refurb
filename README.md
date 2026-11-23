@@ -28,15 +28,19 @@ python3 secure_refurb.py --output my-report.json
 Without `--output`, the report is saved as `report.json` in the current reporting directory. Each run replaces the destination file. The destination folder must already exist.
 
 ## Project status
-*last updated: November 17, 2026*
+*last updated: November 23, 2026*
 
 **In development — working prototype**
 
-Report output is configurable, with automated tests covering disk-space checks, threshold validation, default and custom report filenames, and report-saving failures.
+SecureRefurb generates JSON reports containing system information, disk-space checks, and a Linux memory-capacity check.
 
-All 14 automated tests passed on macOS, Ubuntu ARM64 in UTM, and Ubuntu x86_64 on a physical ThinkPad T14 Gen2. Valid JSON reports were generated and parsed successfully on both Ubuntu systems.
+All 18 automated tests passed on macOS and Ubuntu x86_64 on a physical ThinkPad T14 Gen 2. The ThinkPad reported 15.3 GiB of usable memory, passing the default 4 GiB minimum. It's JSON report was generated and parsed successfully.
 
-**Next milestone:** Add a memory capacity check.
+Earlier validation in an Ubuntu ARM64 virtual machine in UTM passed the 14 tests available at the time.
+
+The memory check reads Linux's `/proc/meminfo`. When memory information cannot be read, it reports an unknown result with an error explaination.
+
+**Next milestone:** Add a firewall status check on Ubuntu. 
 
 Additional readiness checks and HTML reports are planned.
 
@@ -63,7 +67,7 @@ Validated on October 29, 2026 using Ubuntu Server in UTM.
 
 ## Physical hardware validation
 
-Validated on November 17, 2026 using Ubuntu desktop on a refurbished Lenovo ThinkPad T14 Gen 2 Intel.
+Validated on November 17, 2026 using Ubuntu Desktop on a refurbished Lenovo ThinkPad T14 Gen 2 Intel.
 
 - Hardware: Core-i5-1145G7, 16 GB RAM, 256 GB SSD
 - Architecture: x86_64
@@ -71,3 +75,12 @@ Validated on November 17, 2026 using Ubuntu desktop on a refurbished Lenovo Thin
 - Automated tests: all 14 passed
 - Report: 'thinkpad-report.json' generated and parsed successfully
 - Disk check: passed with 86.0 GiB available against a 20 GiB minimum
+
+## Memory-capacity validation
+
+Validated on November 23, 2026 using Ubuntu Desktop on a refurbished Lenovo ThinkPad T14 Gen 2 Intel.
+
+- All 18 automated tests passed on macOS and Ubuntu.
+- The ThinkPad reported 15.3 GiB of usable memory.
+- The memory-capacity check passed against the default 4 GiB minimum.
+- On macOS, the Linux memory check reports an unknown result with an explaination that it was because `/proc/meminfo` is unavailable. 
