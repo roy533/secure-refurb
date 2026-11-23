@@ -1,3 +1,4 @@
+from dbm import error
 import platform
 import shutil
 import json
@@ -25,6 +26,32 @@ def check_disk_space(path=".", minimum_free_gib=20):
         "passed": free_gib >= minimum_free_gib,
         "error": None
     }
+
+def check_memory_capacity(minimum_gib=4):
+    try:
+        with open("/proc/meminfo", "r", encoding="utf-8") as meminfo_file:
+            contents = meminfo_file.read()
+
+        for line in contents.splitlines():
+            if line.startswith("MemTotal:"):
+                fields = line.split()
+                total_kib = int(fields[1])
+                total_gib = total_kib / (1024 ** 2)  # Convert KiB to GiB
+                return {
+                    "total_gib": round(total_gib, 1),
+                    "minimum_gib": minimum_gib,
+                    "passed": total_gib >= minimum_gib,
+                    "error": None
+                }
+
+        raise ValueError("MemTotal not found in /proc/meminfo")
+    except (OSError, ValueError) as error:
+        return {
+            "total_gib": None,
+            "minimum_gib": minimum_gib,
+            "passed": None,
+            "error": str(error)
+        }
 
 def non_negative_finite_gib(value):
     try:
@@ -69,11 +96,13 @@ def main():
         else:
             print("Disk space check failed. Please free up some space.")
 
+    memory_result = check_memory_capacity()
     report = {
         "operating_system": platform.system(),
         "processor_architecture": platform.machine(),
         "python_version": platform.python_version(),
-        "disk_space": disk_result
+        "disk_space": disk_result,
+        "memory_result": memory_result
     }
 
     try:

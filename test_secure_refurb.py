@@ -6,8 +6,8 @@ from pathlib import Path
 import argparse
 import unittest
 from types import SimpleNamespace
-from unittest.mock import patch
-from secure_refurb import check_disk_space, non_negative_finite_gib
+from unittest.mock import mock_open, patch
+from secure_refurb import check_disk_space, check_memory_capacity, non_negative_finite_gib
 
 class TestCheckDiskSpace(unittest.TestCase):
     def test_sufficient_space_passes(self):
@@ -79,12 +79,6 @@ class TestThresholdValidation(unittest.TestCase):
         for value, expected in [("0", 0.0), ("20", 20.0), ("2.5", 2.5)]:
             with self.subTest(value=value):
                 self.assertEqual(non_negative_finite_gib(value), expected)
-
-        def test_invalid_threshold_non_numeric(self):
-            for value in ["-1", "inf", "-inf", "nan", "abc"]:
-                with self.subTest(value=value):
-                    with self.assertRaises(argparse.ArgumentTypeError):
-                        non_negative_finite_gib(value)
 
     def test_invalid_threshold_non_numeric(self):
         with self.assertRaises(argparse.ArgumentTypeError):
@@ -158,6 +152,52 @@ class TestReportSaving(unittest.TestCase):
 
             self.assertIn("disk_space", report)
             self.assertIn("operating_system", report)
-            
+            self.assertIn("memory_result", report)
+
+class TestCheckMemoryCapacity(unittest.TestCase):
+    def test_reads_total_memory_in_gib(self):
+        sample_memory = "MemTotal: 8388608 kB\n"
+
+        with patch("builtins.open", mock_open(read_data=sample_memory)):
+            result = check_memory_capacity()
+
+        self.assertEqual(result["total_gib"], 8.0)
+        self.assertEqual(result["minimum_gib"], 4.0)
+        self.assertTrue(result["passed"])
+        self.assertIsNone(result["error"])
+
+    def test_memory_memtotal_returns_none(self):
+        sample_memory = "MemFree: 1024 kB\n"
+
+        with patch("builtins.open", mock_open(read_data=sample_memory)):
+            result = check_memory_capacity()
+
+        self.assertEqual(result["total_gib"], None)
+        self.assertEqual(result["minimum_gib"], 4.0)
+        self.assertEqual(result["passed"], None)
+        self.assertEqual(result["error"], "MemTotal not found in /proc/meminfo")
+
+    def test_insuefficient_memory_fails(self):
+        sample_memory = "MemTotal: 2097152 kB\n"
+
+        with patch("builtins.open", mock_open(read_data=sample_memory)):
+            result = check_memory_capacity(minimum_gib=4)
+
+        self.assertEqual(result["total_gib"], 2.0)
+        self.assertEqual(result["minimum_gib"], 4.0)
+        self.assertFalse(result["passed"])
+        self.assertIsNone(result["error"])
+
+    def test_exact_minimum_memory_passes(self):
+        sample_memory = "MemTotal: 8388608 kB\n"
+
+        with patch("builtins.open", mock_open(read_data=sample_memory)):
+            result = check_memory_capacity(minimum_gib=8)
+
+        self.assertEqual(result["total_gib"], 8.0)
+        self.assertEqual(result["minimum_gib"], 8.0)
+        self.assertTrue(result["passed"])
+        self.assertIsNone(result["error"])
+
 if __name__ == "__main__":
     unittest.main()
