@@ -53,12 +53,35 @@ Validation completed on October 29. 2026 in UTM. Physical hardware testing remai
 
 Physical validation completed on November 17, 2026 on a refurbished ThinkPad T14 Gen 2 Intel running Ubuntu Desktop (x86_64). All 14 tests passed, and 'thinkpad-report.json' was generated and parsed successfully. See README.md for the results.
 
-# Next: additional checks
+## Completed: Linux memory-capacity check
 
-- [ ] Add a memory-capacity check.
-- [ ] Add a firewall-status check.
+- [X] Read total memory from `/proc/meminfo`.
+- [X] Compare memory against a default 4 GiB minimum.
+- [X] Include the result in the JSON report.
+- [X] Return an unknown result with an explaination when unavailable.
+- [X] Pass all 18 automated tests on macOS and Ubuntu.
+- [X] Validate in the physical ThinkPad: 15.3 GiB reported, check passed.
+
+Completed on November 23, 2026. See README.md for validation details.
+
+## Next: Firewall check
+- [ ] Add an Ubuntu firewall-status check.
+- [ ] Include its status and supporting evidence in the JSON report.
+- [ ] Handle unavailable commands and permission errors.
+- [ ] Add automated tests and validate on the ThinkPad. 
+
+## Planned: Mac and ThinkPad development
+
+- [ ] Simplify SSH access with a ThinkPad host alias.
+- [ ] Run Ubuntu tests from the Mac and capture terminal output.
+- [ ] Generate reports remotely and copy dated versions to the Mac.
+- [ ] Document the commands and report-storage locations.
+- [ ] Evaluate VS Code Remote SSH.
+- [ ] Combine report generation and retrieval into one command.
+
+## Planned: additional security checks
 - [ ] Add selected SSH configuration checks.
-- [ ] Include evidence, explanations, and tests for each check.
+- [ ] Include evidence, explainations, and tests for each check.
 
 ## First release: v0.1.0
 
